@@ -1,0 +1,15 @@
+extends: default
+
+rules:
+  document-start:
+    present: false
+
+  comments:
+    min-spaces-from-content: 1
+
+  trailing-spaces:
+    level: error
+
+  line-length:
+    max: 160
+    allow-non-breakable-words: true

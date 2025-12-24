@@ -1,0 +1,4 @@
+resources:
+  - platform-external-dns.yaml
+  - platform-traefik.yaml
+  - workloads.yaml
