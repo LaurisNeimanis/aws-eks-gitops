@@ -20,6 +20,18 @@ This strict separation reflects how modern organizations split **infrastructure 
 > The same architectural approach can be applied to other Kubernetes environments
 > (GKE, AKS, on-prem), with infrastructure-specific components treated as external
 > dependencies.
+>
+> ⚠️ **Domain & TLS configuration notice**
+>
+> This repository contains **example domain names and TLS certificate references**
+> owned by the author.
+>
+> Before deploying this platform in another environment,
+> all domain- and certificate-related values **must be updated**.
+>
+> See:
+> **Domain & TLS Configuration Guide**  
+> → [`docs/domain-configuration.md`](docs/domain-configuration.md)
 
 ---
 
@@ -56,6 +68,47 @@ This repository manages **everything above the infrastructure layer**.
 * Low-level cluster creation
 
 Infrastructure is treated as a **stable external dependency**, provisioned separately and consumed by this GitOps layer.
+
+---
+
+## Minimum cluster requirements (GitOps layer)
+
+This repository assumes a **pre-existing EKS cluster** provisioned
+by the infrastructure layer.
+
+The following baseline has been validated to reliably run the GitOps
+control plane and platform services defined in this repository.
+
+### Baseline (dev / non-production)
+
+- **Worker nodes**
+  - Instance types: `t3.small` (primary), `t3a.small` (capacity fallback)
+  - Node count: **2**
+- **Purpose**
+  - Argo CD control plane
+  - ApplicationSets controller
+  - Platform services (Traefik, ExternalDNS)
+  - Light application workloads
+
+This baseline provides sufficient CPU and memory headroom for:
+- Argo CD reconciliation
+- Concurrent ApplicationSet processing
+- Ingress and DNS controllers
+
+This baseline accounts for reconciliation bursts during ApplicationSet sync
+and rolling updates.
+
+### Notes and limitations
+
+- Single-node clusters are **not supported** and may result in:
+  - reconciliation stalls
+  - scheduling deadlocks
+  - unsafe rolling updates
+- Smaller instance types (e.g. `t3.micro`) are typically insufficient
+  once Argo CD and platform controllers are running.
+
+Production sizing is intentionally environment-specific and
+out of scope for this repository.
 
 ---
 
@@ -132,7 +185,7 @@ Platform services & Workloads
 
 This separation mirrors how production platforms are operated in practice.
 
-> 📘 **Detailed runtime view**  
+> **Detailed runtime view**  
 > For a low-level, implementation-oriented view of the control plane,
 > reconciliation flow, and ingress runtime behavior, see:  
 > [`docs/gitops-runtime-architecture.md`](docs/gitops-runtime-architecture.md)
@@ -143,9 +196,16 @@ This separation mirrors how production platforms are operated in practice.
 
 This repository uses a **deterministic, App-of-Apps based bootstrap flow**.
 
+⚠️ **Important**
+Before starting the bootstrap process, ensure all domain and TLS
+values have been reviewed and updated.
+
+See:
+[`docs/domain-configuration.md`](docs/domain-configuration.md)
+
 The full installation and bootstrap procedure is documented here:
 
-📄 **Installation & Bootstrap Guide**  
+**Installation & Bootstrap Guide**  
 → [`docs/installation.md`](docs/installation.md)
 
 The guide covers:
@@ -197,11 +257,16 @@ This enforces:
 
 ## DNS & Ingress Model
 
-The platform uses a **single shared ingress endpoint**:
+The platform uses a **single shared ingress endpoint**.
 
+Example:
 ```text
 ingress.ccore.ai
 ```
+
+The actual hostname must be adapted to your environment.
+See:
+→ [`docs/domain-configuration.md`](docs/domain-configuration.md)
 
 ### TLS Termination & Redirect
 
@@ -216,10 +281,15 @@ HTTP to HTTPS redirection is enforced globally at the Traefik entryPoint level.
 * ExternalDNS automatically manages DNS records in **Cloudflare**
 * Application domains are defined as CNAMEs:
 
+Example DNS mappings:
 ```text
 demo.ccore.ai    → ingress.ccore.ai
 whoami.ccore.ai  → ingress.ccore.ai
 ```
+
+All domain names shown here are examples only and must be replaced
+according to:
+→ [`docs/domain-configuration.md`](docs/domain-configuration.md)
 
 ExternalDNS continuously reconciles DNS state, ensuring:
 
