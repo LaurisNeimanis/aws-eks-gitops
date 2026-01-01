@@ -14,6 +14,19 @@ It assumes a **pre-existing Kubernetes cluster** and focuses exclusively on the
 - `kubectl` configured with **cluster-admin** access
 - Git
 - (Optional) `argocd` CLI for local inspection
+- Valid DNS domain ownership and TLS certificate available (ACM or equivalent)
+
+⚠️ **Mandatory precondition**
+
+This repository contains **example domains and certificate references**
+owned by the author.
+
+Before proceeding, you **must** update all domain- and TLS-related values
+to match your own environment.
+
+See:
+**Domain & TLS Configuration Guide**  
+→ [`docs/domain-configuration.md`](docs/domain-configuration.md)
 
 ---
 
