@@ -1,6 +1,6 @@
 # AWS EKS GitOps Platform — ArgoCD, ApplicationSets & Kustomize
 
-This repository implements a **production-grade GitOps layer** for managing **platform services and application workloads on AWS EKS**, following current industry best practices used in **mid–large scale production environments**.
+This repository implements a **production-aligned GitOps layer** for managing **platform services and application workloads on AWS EKS**, following current industry best practices used in **mid–large scale production environments**.
 
 The repository intentionally focuses **only on the Kubernetes and GitOps layers**.
 
