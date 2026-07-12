@@ -178,7 +178,7 @@ Platform services & Workloads
 
 ### Layering Model
 
-* **Terraform** – AWS infrastructure, EKS, IAM, networking, IRSA, load balancers
+* **Terraform** – AWS infrastructure, EKS, IAM, networking, workload identity prerequisites, load balancers
 * **ArgoCD** – Kubernetes reconciliation engine
 * **ApplicationSets** – scalable, environment-aware application definitions
 * **Kustomize** – workload-level environment customization

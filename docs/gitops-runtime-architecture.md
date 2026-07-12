@@ -81,7 +81,7 @@ sequenceDiagram
 ### Terraform (out of scope for this repo)
 - VPC, subnets, routing
 - EKS cluster provisioning
-- IAM, IRSA, load balancer integration
+- IAM, workload identity prerequisites, load balancer integration
 - ACM certificate provisioning
 
 ### ArgoCD
